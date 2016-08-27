@@ -1,2 +1,3 @@
-# cahUWP-server
-Server for the cahUWP repo
+# Cards Against Humanity Server
+
+Much like Shrek, this is love and this is life.

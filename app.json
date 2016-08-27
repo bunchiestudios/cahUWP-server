@@ -1,0 +1,6 @@
+{
+  "name": "Cards Against Humanity Server",
+  "description": "A Cards Against Humanity backend server.",
+  "image": "heroku/java",
+  "addons": [ "heroku-postgresql" ]
+}
