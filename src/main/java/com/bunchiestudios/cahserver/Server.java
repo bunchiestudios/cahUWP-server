@@ -29,6 +29,9 @@ public class Server {
             } catch(IOException e) {
                 log.error("Error establishing socket!", e);
             }
-        }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }
