@@ -88,6 +88,11 @@
             <version>2.19.1</version>
           </dependency>
         </dependencies>
+        <configuration>
+          <includes>
+            <include>TruthTest.java</include>
+          </includes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
