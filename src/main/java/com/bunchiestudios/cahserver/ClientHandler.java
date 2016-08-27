@@ -28,7 +28,7 @@ public class ClientHandler implements Runnable {
         log.info("ClientHandler called");
     }
 
-    public byte[] recieveData()throws IOException {
+    public byte[] recieveData() throws IOException {
         int length = in.readInt();
 
         byte[] data = new byte[length];
