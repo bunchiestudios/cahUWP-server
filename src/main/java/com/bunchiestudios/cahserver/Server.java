@@ -13,14 +13,20 @@ import java.util.concurrent.Executors;
  */
 public class Server {
     private static Logger log = Logger.getLogger(Server.class);
-    private int CLIENT_THREADS = 100;
+    private int CLIENT_THREADS = 100;   //Number of client threads
+    private int port;    //Stores the port to be used for comms
+    
+    public Server(int portIn){
+        //Save received port
+        port = portIn;
+    }
 
     public void start() {
-        ExecutorService clientPool = Executors.newFixedThreadPool(100);
+        ExecutorService clientPool = Executors.newFixedThreadPool(CLIENT_THREADS);
         
         Runnable runnable = () -> {
             try {
-                ServerSocket server = new ServerSocket(4242);
+                ServerSocket server = new ServerSocket(port);
                 while(true) {
                     Socket client = server.accept();
                     clientPool.submit(new ClientHandler(client));

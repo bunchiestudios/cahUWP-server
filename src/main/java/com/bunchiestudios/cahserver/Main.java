@@ -9,8 +9,13 @@ public class Main {
     private static Logger log = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
+        /*
+        * PORT IS REQUIRED AS FIRST ARGUMENT
+        */
+        
         try {
-            Server server = new Server();
+            int port = Integer.parseInt(args[0]);
+            Server server = new Server(port);
             server.start();
         } catch (Exception e) {
             log.error("There was an exception!", e);
