@@ -14,7 +14,7 @@ public class Main {
             Server server = new Server();
             server.start();
         } catch (Exception e) {
-            log.error("There was an exception!", e);
+            System.err.println("There was an exception!\n" + e.getMessage());
         }
     }
 }

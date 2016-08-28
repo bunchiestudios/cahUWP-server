@@ -32,9 +32,9 @@ public class Server {
             System.out.println("Using DB URL: " + dburl);
             
         }catch(NumberFormatException ex){
-            log.error("Error reading PORT variable!", ex);
+            System.err.println("Error reading PORT variable!\n" + ex.getMessage());
         }catch(Exception ex){
-            log.error("There was an exception in server constructor!", ex);
+            System.err.println("There was an exception in server constructor!\n" + ex.getMessage());
         }
     }
 
@@ -47,10 +47,10 @@ public class Server {
                 while(true) {
                     Socket client = server.accept();
                     clientPool.submit(new ClientHandler(client));
-                    log.info("Client connected");
+                    System.out.println("Client connected");
                 }
             } catch(IOException e) {
-                log.error("Error establishing socket!", e);
+                System.err.println("Error establishing socket!\n" + e.getMessage());
             }
         };
 
