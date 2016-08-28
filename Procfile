@@ -1,1 +1,1 @@
-web:    java -jar target/cahserver.jar $PORT
+web:    java -jar target/cahserver.jar

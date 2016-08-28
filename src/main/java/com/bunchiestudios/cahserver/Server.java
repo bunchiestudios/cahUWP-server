@@ -13,12 +13,29 @@ import java.util.concurrent.Executors;
  */
 public class Server {
     private static Logger log = Logger.getLogger(Server.class);
+    
     private int CLIENT_THREADS = 100;   //Number of client threads
     private int port;    //Stores the port to be used for comms
     
-    public Server(int portIn){
-        //Save received port
-        port = portIn;
+    private String dburl;  //Stored the URL of the DB to be used
+    
+    public Server(){
+        try{
+            //Read PORT system variable
+            int port = Integer.parseInt(System.getenv("PORT"));
+
+            //Read DATABASE_URL system variable
+            dburl = System.getenv("DATABASE_URL");
+            
+            //Debug data
+            System.out.println("Creating server.\nListening on: " + port);
+            System.out.println("Using DB URL: " + dburl);
+            
+        }catch(NumberFormatException ex){
+            log.error("Error reading PORT variable!", ex);
+        }catch(Exception ex){
+            log.error("There was an exception in server constructor!", ex);
+        }
     }
 
     public void start() {
