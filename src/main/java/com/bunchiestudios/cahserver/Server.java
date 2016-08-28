@@ -39,6 +39,7 @@ public class Server {
     }
 
     public void start() {
+        System.out.println("Starting server...");
         ExecutorService clientPool = Executors.newFixedThreadPool(CLIENT_THREADS);
         
         Runnable runnable = () -> {
