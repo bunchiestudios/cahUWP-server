@@ -29,14 +29,14 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             log.info("ClientHandler called");
-            sendData(protocol.receive(recieveData()));
+            sendData(protocol.receive(receiveData()));
         } catch(Exception e) {
             System.err.println("Exception caught while executing protocol message.");
             e.printStackTrace();
         }
     }
 
-    public byte[] recieveData() throws IOException {
+    public byte[] receiveData() throws IOException {
         int length = in.readInt();
 
         byte[] data = new byte[length];
