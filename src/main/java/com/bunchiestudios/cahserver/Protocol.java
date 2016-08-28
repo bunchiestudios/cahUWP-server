@@ -5,17 +5,11 @@ package com.bunchiestudios.cahserver;
  * their respective as well as the state for a particular client.
  */
 public class Protocol {
-    long userId;
-    String userToken;
-    boolean loggedIn;
 
     public Protocol() {
-        userId = 0;
-        userToken = null;
-        loggedIn = false;
     }
 
-    public void recieve(byte[] data) {
-        
+    public byte[] receive(byte[] data) {
+        return null;
     }
 }

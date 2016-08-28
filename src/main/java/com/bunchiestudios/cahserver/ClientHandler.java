@@ -16,16 +16,24 @@ public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private DataOutputStream out;
     private DataInputStream in;
+    private Protocol protocol;
 
     public ClientHandler(Socket socket) throws IOException {
         this.clientSocket = socket;
         out = new DataOutputStream(socket.getOutputStream());
         in =  new DataInputStream(socket.getInputStream());
+        protocol = new Protocol();
     }
 
     @Override
     public void run() {
-        log.info("ClientHandler called");
+        try {
+            log.info("ClientHandler called");
+            sendData(protocol.receive(recieveData()));
+        } catch(Exception e) {
+            System.err.println("Exception caught while executing protocol message.");
+            e.printStackTrace();
+        }
     }
 
     public byte[] recieveData() throws IOException {
