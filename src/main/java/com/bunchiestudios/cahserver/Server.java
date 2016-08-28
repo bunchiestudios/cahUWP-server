@@ -17,11 +17,7 @@ public class Server {
 
     public void start() {
         ExecutorService clientPool = Executors.newFixedThreadPool(100);
-
-        Runnable runnable = () -> hello();
-
-
-
+        
         Runnable runnable = () -> {
             try {
                 ServerSocket server = new ServerSocket(4242);
