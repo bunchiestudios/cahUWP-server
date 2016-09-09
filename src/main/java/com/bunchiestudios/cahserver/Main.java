@@ -9,10 +9,8 @@ public class Main {
     private static Logger log = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
-        
         try {
-            Server server = new Server();
-            server.start();
+            new Server(80).main(args);
         } catch (Exception e) {
             System.err.println("There was an exception!\n" + e.getMessage());
         }

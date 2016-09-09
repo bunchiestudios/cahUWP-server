@@ -14,11 +14,11 @@ import java.util.Map;
  * their respective as well as the state for a particular client.
  */
 public class Protocol {
-    Map<String, Request> requests;
+    Map<String, ServerRequest> requests;
 
     public Protocol() {
         requests = new HashMap<>();
-        List<Request> tempList = new ArrayList<>();
+        List<ServerRequest> tempList = new ArrayList<>();
 
         tempList.add(new CreateGameRequest());
         tempList.add(new GetAllCardsRequest());
@@ -30,7 +30,7 @@ public class Protocol {
         tempList.add(new PickWinnerRequest());
         tempList.add(new PlayRequest());
 
-        for(Request req : tempList)
+        for(ServerRequest req : tempList)
             requests.put(req.getName(), req);
     }
 
