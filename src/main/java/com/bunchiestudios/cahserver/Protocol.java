@@ -41,7 +41,12 @@ public class Protocol {
     public Response receive(Request req) {
         try {
             JSONObject jsonReq = new JSONObject(req.getContentString());
-            String resString = requests.get(new RequestIdentifier(req.path(), req.method().toString())).perform(jsonReq).toString();
+            RequestIdentifier id = new RequestIdentifier(req.path(), req.method().toString());
+
+            if(!requests.containsKey(id)) {
+                throw new PathNotFoundException(req.path());
+            }
+            String resString = requests.get(id).perform(jsonReq).toString();
             Response res = new Response.Ok();
             res.setContentType("application/json", "utf-8");
             res.setContentString(resString);
@@ -50,13 +55,14 @@ public class Protocol {
             System.err.println("There was an error when processing the incoming JSON request:");
             Response res = new Response.Ok();
             res.setStatus(HttpResponseStatus.BAD_REQUEST);
-            res.setContentString("{\"error\":\"Invalid JSON request\"}");
+            res.setContentString("{\"error\":\"Invalid JSON format request\"}");
             return res;
-        } catch (NullPointerException e) {
+        } catch (PathNotFoundException e) {
             System.err.println("requests.get() returned null for the path. Throw 404");
+            System.err.println(e.toString());
             Response res = new Response.Ok();
             res.setStatus(HttpResponseStatus.NOT_FOUND);
-            res.setContentString("{\"error\":\"404: Resource not found\"}");
+            res.setContentString("{\"error\":\"Resource not found\"}");
             return res;
         }
     }
