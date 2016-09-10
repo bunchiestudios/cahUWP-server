@@ -1,6 +1,8 @@
 package com.bunchiestudios.cahserver;
 
 import com.bunchiestudios.cahserver.requests.*;
+import com.twitter.finagle.http.Request;
+import com.twitter.finagle.http.Response;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
@@ -14,7 +16,7 @@ import java.util.Map;
  * their respective as well as the state for a particular client.
  */
 public class Protocol {
-    Map<String, ServerRequest> requests;
+    Map<RequestIdentifier, ServerRequest> requests;
 
     public Protocol() {
         requests = new HashMap<>();
@@ -31,7 +33,16 @@ public class Protocol {
         tempList.add(new PlayRequest());
 
         for(ServerRequest req : tempList)
-            requests.put(req.getName(), req);
+            requests.put(req.getIdentifier(), req);
+    }
+
+    public Response recieve(Request req) {
+        JSONObject jsonReq = new JSONObject(req.getContentString());
+        String resString = requests.get(new RequestIdentifier(req.path(), req.method().toString())).perform(jsonReq).toString();
+        Response res = new Response.Ok();
+        res.setContentType("application/json", "utf-8");
+        res.setContentString(resString);
+        return res;
     }
 
     public byte[] receive(byte[] data) {
