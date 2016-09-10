@@ -6,19 +6,25 @@ import com.twitter.finagle.Service;
 import com.twitter.finagle.http.Response;
 import com.twitter.finagle.http.Request;
 import com.twitter.server.AbstractTwitterServer;
-import com.twitter.util.Future;
+import com.twitter.util.*;
+import scala.runtime.AbstractFunction0;
+
+import java.util.concurrent.Executors;
 
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class Server extends AbstractTwitterServer {
-    private ServerService service = new ServerService();
+    private Protocol protocol;
+    private FuturePool pool;
     
     private int CLIENT_THREADS = 100;   //Number of client threads
     private int port;    //Stores the port to be used for comms
 
     public Server(int port) {
         this.port = port;
+        protocol = new Protocol();
+        pool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(CLIENT_THREADS));
     }
 
     @Override
@@ -26,7 +32,18 @@ public class Server extends AbstractTwitterServer {
         ListeningServer server = null;
         try {
             log().info("Java Server initialization...");
-            server = Http.serve(":" + port, service);
+            server = Http.serve(":" + port, new Service<Request, Response>() {
+                @Override
+                public Future<Response> apply(Request request) {
+                    return pool.apply(new AbstractFunction0<Response>() {
+                        @Override
+                        public Response apply() {
+                            return protocol.recieve(request);
+                        }
+                    });
+
+                }
+            });
             server.wait();
         } catch(InterruptedException e) {
             log().warning("Server was interrupted. Closing");
@@ -34,13 +51,5 @@ public class Server extends AbstractTwitterServer {
             server.close();
         }
 
-    }
-
-    private class ServerService extends Service<Request, Response> {
-
-        @Override
-        public Future<Response> apply(Request request) {
-            return null;
-        }
     }
 }
