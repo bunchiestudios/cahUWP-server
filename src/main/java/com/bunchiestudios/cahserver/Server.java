@@ -30,23 +30,25 @@ public class Server extends AbstractTwitterServer {
     @Override
     public void onInit() {
         ListeningServer server = null;
-        try {
-            log().info("Java Server initialization...");
-            server = Http.serve(":" + port, new Service<Request, Response>() {
-                @Override
-                public Future<Response> apply(Request request) {
-                    return pool.apply(new AbstractFunction0<Response>() {
-                        @Override
-                        public Response apply() {
-                            return protocol.recieve(request);
-                        }
-                    });
+        log().info("Java Server initialization...");
+        server = Http.serve(":" + port, new Service<Request, Response>() {
+            @Override
+            public Future<Response> apply(Request request) {
+                return pool.apply(new AbstractFunction0<Response>() {
+                    @Override
+                    public Response apply() {
+                        return protocol.receive(request);
+                    }
+                });
 
-                }
-            });
-            server.wait();
-        } catch(InterruptedException e) {
-            log().warning("Server was interrupted. Closing");
+            }
+        });
+        try {
+            Await.ready(server);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
         } finally {
             server.close();
         }

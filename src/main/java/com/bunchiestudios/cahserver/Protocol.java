@@ -3,6 +3,8 @@ package com.bunchiestudios.cahserver;
 import com.bunchiestudios.cahserver.requests.*;
 import com.twitter.finagle.http.Request;
 import com.twitter.finagle.http.Response;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
@@ -36,19 +38,26 @@ public class Protocol {
             requests.put(req.getIdentifier(), req);
     }
 
-    public Response recieve(Request req) {
-        JSONObject jsonReq = new JSONObject(req.getContentString());
-        String resString = requests.get(new RequestIdentifier(req.path(), req.method().toString())).perform(jsonReq).toString();
-        Response res = new Response.Ok();
-        res.setContentType("application/json", "utf-8");
-        res.setContentString(resString);
-        return res;
-    }
-
-    public byte[] receive(byte[] data) {
-        String req = new String(data, Charset.forName("UTF-8"));
-        JSONObject jsonReq = new JSONObject(req);
-        String res = requests.get(jsonReq.getString("reqName")).perform(jsonReq).toString();
-        return res.getBytes(Charset.forName("UTF-8"));
+    public Response receive(Request req) {
+        try {
+            JSONObject jsonReq = new JSONObject(req.getContentString());
+            String resString = requests.get(new RequestIdentifier(req.path(), req.method().toString())).perform(jsonReq).toString();
+            Response res = new Response.Ok();
+            res.setContentType("application/json", "utf-8");
+            res.setContentString(resString);
+            return res;
+        } catch(JSONException e) {
+            System.err.println("There was an error when processing the incoming JSON request:");
+            Response res = new Response.Ok();
+            res.setStatus(HttpResponseStatus.BAD_REQUEST);
+            res.setContentString("{\"error\":\"Invalid JSON request\"}");
+            return res;
+        } catch (NullPointerException e) {
+            System.err.println("requests.get() returned null for the path. Throw 404");
+            Response res = new Response.Ok();
+            res.setStatus(HttpResponseStatus.NOT_FOUND);
+            res.setContentString("{\"error\":\"404: Resource not found\"}");
+            return res;
+        }
     }
 }
