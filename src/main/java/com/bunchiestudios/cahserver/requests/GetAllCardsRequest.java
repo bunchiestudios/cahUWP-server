@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ public class GetAllCardsRequest implements ServerRequest {
     }
 
     @Override
-    public String getName() {
-        return "get-all-cards";
+    public RequestIdentifier getIdentifier() {
+        return new RequestIdentifier("/cards", "GET");
     }
 }

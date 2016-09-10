@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ public class GetUsersRequest implements ServerRequest {
     }
 
     @Override
-    public String getName() {
-        return "get-users";
+    public RequestIdentifier getIdentifier() {
+        return new RequestIdentifier("/game/users", "GET");
     }
 }

@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ public class LoginRequest implements ServerRequest {
     }
 
     @Override
-    public String getName() {
-        return "login";
+    public RequestIdentifier getIdentifier() {
+        return new RequestIdentifier("/users", "POST");
     }
 }
