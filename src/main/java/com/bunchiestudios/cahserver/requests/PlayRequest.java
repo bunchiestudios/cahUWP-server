@@ -1,12 +1,13 @@
 package com.bunchiestudios.cahserver.requests;
 
-import com.bunchiestudios.cahserver.Request;
+import com.bunchiestudios.cahserver.RequestIdentifier;
+import com.bunchiestudios.cahserver.ServerRequest;
 import org.json.JSONObject;
 
 /**
  * Created by rdelfin on 8/27/16.
  */
-public class PlayRequest implements Request {
+public class PlayRequest implements ServerRequest {
 
     @Override
     public JSONObject perform(JSONObject message) {
@@ -14,7 +15,7 @@ public class PlayRequest implements Request {
     }
 
     @Override
-    public String getName() {
-        return "play";
+    public RequestIdentifier getIdentifier() {
+        return new RequestIdentifier("/game/cards", "POST");
     }
 }

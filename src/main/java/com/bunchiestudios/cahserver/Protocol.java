@@ -1,6 +1,10 @@
 package com.bunchiestudios.cahserver;
 
 import com.bunchiestudios.cahserver.requests.*;
+import com.twitter.finagle.http.Request;
+import com.twitter.finagle.http.Response;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
@@ -14,11 +18,11 @@ import java.util.Map;
  * their respective as well as the state for a particular client.
  */
 public class Protocol {
-    Map<String, Request> requests;
+    Map<RequestIdentifier, ServerRequest> requests;
 
     public Protocol() {
         requests = new HashMap<>();
-        List<Request> tempList = new ArrayList<>();
+        List<ServerRequest> tempList = new ArrayList<>();
 
         tempList.add(new CreateGameRequest());
         tempList.add(new GetAllCardsRequest());
@@ -30,14 +34,36 @@ public class Protocol {
         tempList.add(new PickWinnerRequest());
         tempList.add(new PlayRequest());
 
-        for(Request req : tempList)
-            requests.put(req.getName(), req);
+        for(ServerRequest req : tempList)
+            requests.put(req.getIdentifier(), req);
     }
 
-    public byte[] receive(byte[] data) {
-        String req = new String(data, Charset.forName("UTF-8"));
-        JSONObject jsonReq = new JSONObject(req);
-        String res = requests.get(jsonReq.getString("reqName")).perform(jsonReq).toString();
-        return res.getBytes(Charset.forName("UTF-8"));
+    public Response receive(Request req) {
+        try {
+            JSONObject jsonReq = new JSONObject(req.getContentString());
+            RequestIdentifier id = new RequestIdentifier(req.path(), req.method().toString());
+
+            if(!requests.containsKey(id)) {
+                throw new PathNotFoundException(req.path());
+            }
+            String resString = requests.get(id).perform(jsonReq).toString();
+            Response res = new Response.Ok();
+            res.setContentType("application/json", "utf-8");
+            res.setContentString(resString);
+            return res;
+        } catch(JSONException e) {
+            System.err.println("There was an error when processing the incoming JSON request:");
+            Response res = new Response.Ok();
+            res.setStatus(HttpResponseStatus.BAD_REQUEST);
+            res.setContentString("{\"error\":\"Invalid JSON format request\"}");
+            return res;
+        } catch (PathNotFoundException e) {
+            System.err.println("requests.get() returned null for the path. Throw 404");
+            System.err.println(e.toString());
+            Response res = new Response.Ok();
+            res.setStatus(HttpResponseStatus.NOT_FOUND);
+            res.setContentString("{\"error\":\"Resource not found\"}");
+            return res;
+        }
     }
 }

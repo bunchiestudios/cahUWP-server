@@ -1,12 +1,14 @@
 package com.bunchiestudios.cahserver.requests;
 
-import com.bunchiestudios.cahserver.Request;
+import com.bunchiestudios.cahserver.RequestIdentifier;
+import com.bunchiestudios.cahserver.ServerRequest;
+import com.twitter.finagle.http.Method;
 import org.json.JSONObject;
 
 /**
  * Created by rdelfin on 8/27/16.
  */
-public class CreateGameRequest implements Request {
+public class CreateGameRequest implements ServerRequest {
 
     @Override
     public JSONObject perform(JSONObject message) {
@@ -14,7 +16,7 @@ public class CreateGameRequest implements Request {
     }
 
     @Override
-    public String getName() {
-        return "create-game";
+    public RequestIdentifier getIdentifier() {
+        return new RequestIdentifier("/game", "POST");
     }
 }
