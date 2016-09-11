@@ -1,12 +1,14 @@
 package com.bunchiestudios.cahserver.database;
 
 import com.bunchiestudios.cahserver.datamodel.Card;
+import com.bunchiestudios.cahserver.datamodel.Game;
 import com.twitter.util.Future;
 import scala.runtime.AbstractFunction1;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,7 +57,6 @@ public class DataManager {
         List<Object> params = new ArrayList<>(ids.size());
         params.addAll(ids);
 
-
         try {
             List<Card> result = new ArrayList<>();
             ResultSet rs = database.getQuery(query.toString(), params);
@@ -68,4 +69,24 @@ public class DataManager {
             throw new InvalidQueryException(query.toString(), e);
         }
     }
+
+    public Game addGame(String name) {
+        String query = "INSERT INTO game (name) VALUES (?)";
+        String getQuery = "SELECT id FROM game WHERE name=?";
+
+        try {
+             database.executeQuery(query, Arrays.asList(name));
+            ResultSet rs = database.getQuery(getQuery, Arrays.asList(name));
+
+            if(rs.next())
+                return new Game(rs.getLong("id"), name);
+            else
+                return null;
+        } catch(SQLException e) {
+            System.err.println("There was an error when adding game: " + e);
+            return null;
+        }
+    }
+
+    public Game 
 }
