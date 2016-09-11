@@ -1,13 +1,11 @@
 package com.bunchiestudios.cahserver.database;
 
-import com.twitter.util.ExceptionalFunction0;
 import com.twitter.util.ExecutorServiceFuturePool;
 import com.twitter.util.Future;
 import com.twitter.util.FuturePool;
 import scala.runtime.AbstractFunction0;
 import scala.runtime.AbstractFunction1;
 
-import javax.sql.RowSet;
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.Executors;
