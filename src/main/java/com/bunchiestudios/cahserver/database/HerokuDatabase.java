@@ -14,10 +14,7 @@ import java.util.concurrent.Executors;
  * Created by rdelfin on 9/10/16.
  */
 public class HerokuDatabase {
-    private FuturePool pool;
     private String host, port, path, username, password;
-
-    private final static int THREADS = 20;
 
     public HerokuDatabase(String host, String port, String path, String username, String password) {
         this.host = host;
@@ -25,8 +22,6 @@ public class HerokuDatabase {
         this.password = password;
         this.port = port;
         this.path = path;
-
-        pool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(THREADS));
     }
 
 
@@ -36,52 +31,23 @@ public class HerokuDatabase {
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
-    private Future<ResultSet> getQuery(String sql, List<Object> params) throws SQLException {
-        return pool.apply(new AbstractFunction0<Future<ResultSet>>() {
-            @Override
-            public Future<ResultSet> apply() {
-                try {
-                    Connection con = getConnection();
-                    PreparedStatement statement = con.prepareStatement(sql);
-                    for (int i = 0; i < params.size(); i++) {
-                        statement.setObject(i, params.get(i));
-                    }
+    public ResultSet getQuery(String sql, List<Object> params) throws SQLException {
+        Connection con = getConnection();
+        PreparedStatement statement = con.prepareStatement(sql);
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i, params.get(i));
+        }
 
-                    return Future.value(statement.executeQuery());
-                } catch(Exception e) {
-                    return Future.exception(e);
-                }
-            }
-        }).flatMap(new AbstractFunction1<Future<ResultSet>, Future<ResultSet>>() {
-            @Override
-            public Future<ResultSet> apply(Future<ResultSet> resultSetFuture) {
-                return resultSetFuture;
-            }
-        });
+        return statement.executeQuery();
     }
 
-    private Future<Void> executeQuery(String sql, List<Object> params) {
-        return pool.apply(new AbstractFunction0<Future<Void>>() {
-            @Override
-            public Future<Void> apply() {
-                try {
-                    Connection con = getConnection();
-                    PreparedStatement statement = con.prepareStatement(sql);
-                    for (int i = 0; i < params.size(); i++) {
-                        statement.setObject(i, params.get(i));
-                    }
+    public void executeQuery(String sql, List<Object> params) throws SQLException {
+        Connection con = getConnection();
+        PreparedStatement statement = con.prepareStatement(sql);
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i, params.get(i));
+        }
 
-                    statement.execute();
-                    return Future.value(null);
-                } catch(Exception e) {
-                    return Future.exception(e);
-                }
-            }
-        }).flatMap(new AbstractFunction1<Future<Void>, Future<Void>>() {
-            @Override
-            public Future<Void> apply(Future<Void> resultSetFuture) {
-                return resultSetFuture;
-            }
-        });
+        statement.execute();
     }
 }
