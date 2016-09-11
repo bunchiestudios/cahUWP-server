@@ -6,6 +6,8 @@ import com.twitter.util.FuturePool;
 import scala.runtime.AbstractFunction0;
 import scala.runtime.AbstractFunction1;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -14,20 +16,24 @@ import java.util.concurrent.Executors;
  * Created by rdelfin on 9/10/16.
  */
 public class HerokuDatabase {
-    private String host, port, path, username, password;
+    private URI dbUri;
+    private String username, password;
 
-    public HerokuDatabase(String host, String port, String path, String username, String password) {
-        this.host = host;
-        this.username = username;
-        this.password = password;
-        this.port = port;
-        this.path = path;
+    public HerokuDatabase() {
+        try {
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+
+            username = dbUri.getUserInfo().split(":")[0];
+            password = dbUri.getUserInfo().split(":")[1];
+        } catch(URISyntaxException e) {
+            System.err.println("DATABASE_URL environment variable could not be parsed: " + e);
+        }
+
     }
 
 
     private Connection getConnection() throws SQLException {
-        String dbUrl = "jdbc:postgresql://" + host + ':' + port + path;
-
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
