@@ -72,21 +72,66 @@ public class DataManager {
 
     public Game addGame(String name) {
         String query = "INSERT INTO game (name) VALUES (?)";
-        String getQuery = "SELECT id FROM game WHERE name=?";
 
         try {
-             database.executeQuery(query, Arrays.asList(name));
-            ResultSet rs = database.getQuery(getQuery, Arrays.asList(name));
-
-            if(rs.next())
-                return new Game(rs.getLong("id"), name);
-            else
-                return null;
+            database.executeQuery(query, Arrays.asList(name));
+            return getGame(name);
         } catch(SQLException e) {
             System.err.println("There was an error when adding game: " + e);
             return null;
         }
     }
 
-    public Game 
+    public Game getGame(String name) {
+        String query = "SELECT id, name FROM game WHERE name=?";
+
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(name));
+
+            if(rs.next())
+                return new Game(rs.getLong("id"), rs.getString("name"));
+            else
+                return null;
+        } catch(SQLException e) {
+            System.err.println("There was an error when getting game: " + e);
+            return null;
+        }
+    }
+
+    public Game getGame(long id) {
+        String query = "SELECT id, name FROM game WHERE id=?";
+
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(id));
+
+            if(rs.next())
+                return new Game(rs.getLong("id"), rs.getString("name"));
+            else
+                return null;
+        } catch(SQLException e) {
+            System.err.println("There was an error when getting game: " + e);
+            return null;
+        }
+    }
+
+    public boolean joinGame(long gameId, long playerId) {
+        Game game = getGame(gameId);
+
+        if(game == null)
+            return false;
+
+        String query = "UPDATE player SET game_id=? WHERE player_id=?";
+
+        try {
+            database.executeQuery(query, Arrays.asList(gameId, playerId));
+            return true;
+        } catch(SQLException e) {
+            System.err.println("There was an error when joining game: " + e);
+            return false;
+        }
+    }
+
+    public List<Card> drawNWhiteCards(long gameId, int n) {
+        String query
+    }
 }
