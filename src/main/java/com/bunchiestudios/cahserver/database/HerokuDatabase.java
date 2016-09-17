@@ -41,7 +41,7 @@ public class HerokuDatabase {
         Connection con = getConnection();
         PreparedStatement statement = con.prepareStatement(sql);
         for (int i = 0; i < params.size(); i++) {
-            statement.setObject(i, params.get(i));
+            statement.setObject(i + 1, params.get(i));
         }
 
         return statement.executeQuery();
@@ -51,9 +51,28 @@ public class HerokuDatabase {
         Connection con = getConnection();
         PreparedStatement statement = con.prepareStatement(sql);
         for (int i = 0; i < params.size(); i++) {
-            statement.setObject(i, params.get(i));
+            statement.setObject(i + 1, params.get(i));
         }
 
         statement.execute();
+    }
+
+    public long insertAndGetIndex(String sql, String seqName, List<Object> params) throws SQLException {
+        Connection con = getConnection();
+        PreparedStatement statement = con.prepareStatement(sql);
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        statement.execute();
+
+        PreparedStatement statement2 = con.prepareStatement("SELECT currval(?)");
+        statement2.setString(1, seqName);
+        ResultSet rs = statement2.executeQuery();
+
+        if(rs.next())
+            return rs.getLong(1);
+
+        return -1;
     }
 }

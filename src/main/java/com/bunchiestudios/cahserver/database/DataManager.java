@@ -71,6 +71,23 @@ public class DataManager {
         }
     }
 
+    public List<Card> addCards(List<Card> cards) {
+        List<Card> result = new ArrayList<>();
+        try {
+            String insertQuery = "INSERT INTO cards (message, pick_n, black) VALUES (?, ?, ?)";
+            for(Card c : cards) {
+                long id = database.insertAndGetIndex(insertQuery, "card_id_seq",
+                        Arrays.asList(c.getMessage(), c.getPickN(), c.isBlack()));
+                result.add(new Card(id, c.getMessage(), c.getPickN(), c.isBlack()));
+            }
+        } catch(SQLException e) {
+            System.err.println("Error inserting cards: " + e);
+            return result;
+        }
+
+        return result;
+    }
+
     /**
      * Creates a new game.
      * @param name Name (unique) of the game
