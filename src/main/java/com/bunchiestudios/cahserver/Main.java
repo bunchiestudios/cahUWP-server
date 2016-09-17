@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            new Server(80).main(args);
+            new Server(4242).main(args);
         } catch (Exception e) {
             System.err.println("There was an exception!\n" + e.getMessage());
         }
