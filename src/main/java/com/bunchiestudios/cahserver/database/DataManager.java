@@ -93,13 +93,16 @@ public class DataManager {
      * @return A game object if it exists, null otherwise
      */
     public Game getGame(String name) {
-        String query = "SELECT id, name FROM game WHERE name=?";
+        String query = "SELECT id, name, black_deck, white_deck FROM game WHERE name=?";
 
         try {
             ResultSet rs = database.getQuery(query, Arrays.asList(name));
 
             if(rs.next())
-                return new Game(rs.getLong("id"), rs.getString("name"));
+                return new Game(rs.getLong("id"),
+                        rs.getString("name"),
+                        (Long)rs.getObject("white_deck"),
+                        (Long)rs.getObject("black_deck"));
             else
                 return null;
         } catch(SQLException e) {
@@ -113,13 +116,16 @@ public class DataManager {
      * @return A game object if it exists, null otherwise
      */
     public Game getGame(long id) {
-        String query = "SELECT id, name FROM game WHERE id=?";
+        String query = "SELECT id, name, white_deck, black_deck FROM game WHERE id=?";
 
         try {
             ResultSet rs = database.getQuery(query, Arrays.asList(id));
 
             if(rs.next())
-                return new Game(rs.getLong("id"), rs.getString("name"));
+                return new Game(rs.getLong("id"),
+                        rs.getString("name"),
+                        (Long)rs.getObject("white_deck"),
+                        (Long)rs.getObject("black_deck"));
             else
                 return null;
         } catch(SQLException e) {
@@ -172,6 +178,101 @@ public class DataManager {
         return (cards.size() == 0 ? null : cards.get(0));
     }
 
+    /**
+     * Assigns a drawn card to a given user.
+     * @param playerId The unique identifier for the user getting the card
+     * @param gameId The game's unique identifier.
+     * @param cardId The card's unique identifier.
+     * @return True if operation was successful, false otherwise.
+     */
+    public boolean assignCard(long playerId, long gameId, long cardId) {
+        String query = "UPDATE game_cards SET player_id=?, daisy_chain=NULL WHERE game_id=? AND card_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(playerId, gameId, cardId));
+        } catch (SQLException e) {
+            System.err.println("There was an error when assigning card to user: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Discards a card by setting player_id to NULL and status to 0.
+     * @param gameId The game's unique identifier.
+     * @param cardId The card's unique identifier.
+     * @return True if the operation was successful, false otherwise.
+     */
+    public boolean discardCard(long gameId, long cardId) {
+        String query = "UPDATE game_cards SET player_id=NULL, status=0 WHERE game_id=? AND card_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(gameId, cardId));
+        } catch (SQLException e) {
+            System.err.println("There was an error discarding card: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Sets the card as played by setting status to 1.
+     * @return True if successful, false otherwise.
+     */
+    public boolean playCard(long gameId, long cardId) {
+        String query = "UPDATE game_cards SET status=1 WHERE game_id=? AND card_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(gameId, cardId));
+        } catch (SQLException e) {
+            System.err.println("Error while setting cared as played: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Indicates whether a given card is in the player's hand
+     * @param playerId Player's unique identifier.
+     * @param cardId Card's unique identifier.
+     * @return True if present. False otherwise.
+     */
+    public boolean inHand(long playerId, long cardId) {
+        String query = "SELECT * FROM game_cards WHERE player_id=? AND card_id=? and game_id IN (" +
+                    "SELECT game_id FROM player WHERE player_id=?" +
+                ")";
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(playerId, cardId, playerId));
+            return rs.next();
+        } catch(SQLException e) {
+            System.err.println("There was an error when checking card in hand: " + e);
+            return false;
+        }
+    }
+
+    public List<GameCard> getHand(long playerId, long gameId) {
+        String query = "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards WHERE player_id=? AND game_id=?";
+        List<GameCard> result = new ArrayList<>();
+
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(playerId, gameId));
+
+            while(rs.next()) {
+                GameCard c = new GameCard(rs.getLong("card_id"),
+                        rs.getLong("game_id"),
+                        (Long)rs.getObject("player_id"),    // Handles NULL case
+                        (Long)rs.getObject("daisy_chain"),  // Handles NULL case
+                        rs.getShort("status"));
+                result.add(c);
+            }
+        } catch (SQLException e) {
+            System.err.println("There was an error fetching hand: " + e);
+            return new ArrayList<>();
+        }
+
+        return result;
+    }
+
 
     /**
      * Helper method to arbitrarily pick out n cards from either the white or black deck. It also updates the
@@ -201,7 +302,8 @@ public class DataManager {
             if(rs.next()) {
                 GameCard c = new GameCard(rs.getLong("card_id"),
                         rs.getLong("game_id"),
-                        rs.getLong("daisy_chain"),
+                        (Long)rs.getObject("player_id"),
+                        (Long)rs.getObject("daisy_chain"),
                         rs.getShort("status"));
                 result.add(c);
             } else {
@@ -220,7 +322,8 @@ public class DataManager {
                 if(rs.next()) {
                     GameCard c = new GameCard(rs.getLong("card_id"),
                             rs.getLong("game_id"),
-                            rs.getLong("daisy_chain"),
+                            (Long)rs.getObject("player_id"),
+                            (Long)rs.getObject("daisy_chain"),
                             rs.getShort("status"));
                     result.add(c);
                 } else {
