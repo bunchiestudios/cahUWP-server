@@ -6,15 +6,13 @@ package com.bunchiestudios.cahserver.datamodel;
 public class GameCard {
     private long cardId;
     private long gameId;
-    private long daisyChainCard;
-    private long daisyChainGame;
+    private long daisyChain;
     private short status;
 
-    public GameCard(long cardId, long gameId, long daisyChainCard, long daisyChainGame, short status) {
+    public GameCard(long cardId, long gameId, long daisyChain, short status) {
         this.cardId = cardId;
         this.gameId = gameId;
-        this.daisyChainCard = daisyChainCard;
-        this.daisyChainGame = daisyChainGame;
+        this.daisyChain = daisyChain;
         this.status = status;
     }
 
@@ -34,20 +32,12 @@ public class GameCard {
         this.gameId = gameId;
     }
 
-    public long getDaisyChainCard() {
-        return daisyChainCard;
+    public long getDaisyChain() {
+        return daisyChain;
     }
 
-    public void setDaisyChainCard(long daisyChainCard) {
-        this.daisyChainCard = daisyChainCard;
-    }
-
-    public long getDaisyChainGame() {
-        return daisyChainGame;
-    }
-
-    public void setDaisyChainGame(long daisyChainGame) {
-        this.daisyChainGame = daisyChainGame;
+    public void setDaisyChain(long daisyChain) {
+        this.daisyChain = daisyChain;
     }
 
     public short getStatus() {
