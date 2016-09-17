@@ -159,14 +159,38 @@ public class DataManager {
      * @return A list of n GameCards drawn, or an empty list if an error occured.
      */
     public List<GameCard> drawNWhiteCards(long gameId, int n) {
+        return drawNCards(gameId, n, "white_deck");
+    }
+
+    /**
+     * Draws a single, black card from the deck and updates the black_deck property accordingly.
+     * @param gameId Game's unique identifier used to find the deck
+     * @return A game card object, which is optionally null if no card was found.
+     */
+    public GameCard drawBlackCard(long gameId) {
+        List<GameCard> cards = drawNCards(gameId, 1, "black_deck");
+        return (cards.size() == 0 ? null : cards.get(0));
+    }
+
+
+    /**
+     * Helper method to arbitrarily pick out n cards from either the white or black deck. It also updates the
+     * deck so that the next picked card gets updated in the object.
+     * @param gameId Unique identifier for the game
+     * @param n Number of cards to draw
+     * @param deck Deck name. Either white_deck or black_deck. Any other value will probably result in a SQLException
+     *             and an empty result list.
+     * @return A list with n cards if they were all extracted successfully or an empty list otherwise.
+     */
+    private List<GameCard> drawNCards(long gameId, int n, String deck) {
         String getFirstQuery =
                 "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards " +
-                "WHERE game_id=? AND card_id IN (" +
-                    "SELECT white_deck FROM game WHERE id=?" +
-                ")";
+                        "WHERE game_id=? AND card_id IN (" +
+                        "SELECT " + deck + " FROM game WHERE id=?" +
+                        ")";
         String getNthQuery = "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards " +
                 "WHERE game_id=? AND card_id=?";
-        String updateNextCard = "UPDATE game SET white_deck=? WHERE id=?";
+        String updateNextCard = "UPDATE game SET " + deck + "=? WHERE id=?";
 
         List<GameCard> result = new ArrayList<>();
 
@@ -176,9 +200,9 @@ public class DataManager {
 
             if(rs.next()) {
                 GameCard c = new GameCard(rs.getLong("card_id"),
-                                          rs.getLong("game_id"),
-                                          rs.getLong("daisy_chain"),
-                                          rs.getShort("status"));
+                        rs.getLong("game_id"),
+                        rs.getLong("daisy_chain"),
+                        rs.getShort("status"));
                 result.add(c);
             } else {
                 // In case no cards are found, return an empty list
@@ -195,9 +219,9 @@ public class DataManager {
                 ResultSet rs = database.getQuery(getNthQuery, Arrays.asList(gameId, result.get(result.size() - 1).getDaisyChain()));
                 if(rs.next()) {
                     GameCard c = new GameCard(rs.getLong("card_id"),
-                                              rs.getLong("game_id"),
-                                              rs.getLong("daisy_chain"),
-                                              rs.getShort("status"));
+                            rs.getLong("game_id"),
+                            rs.getLong("daisy_chain"),
+                            rs.getShort("status"));
                     result.add(c);
                 } else {
                     // Again, if next card does not exist, abort
@@ -214,7 +238,7 @@ public class DataManager {
         try {
             database.executeQuery(updateNextCard, Arrays.asList(result.get(result.size() - 1).getDaisyChain(), gameId));
         } catch (SQLException e) {
-            System.err.println("There was an error updating the white_card property: " + e);
+            System.err.println("There was an error updating the " + deck + " property: " + e);
             return new ArrayList<>();
         }
 
