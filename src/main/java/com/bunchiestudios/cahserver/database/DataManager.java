@@ -2,6 +2,7 @@ package com.bunchiestudios.cahserver.database;
 
 import com.bunchiestudios.cahserver.datamodel.Card;
 import com.bunchiestudios.cahserver.datamodel.Game;
+import com.bunchiestudios.cahserver.datamodel.GameCard;
 import com.twitter.util.Future;
 import scala.runtime.AbstractFunction1;
 
@@ -131,7 +132,66 @@ public class DataManager {
         }
     }
 
-    public List<Card> drawNWhiteCards(long gameId, int n) {
-        String query
+    public List<GameCard> drawNWhiteCards(long gameId, int n) {
+        String getFirstQuery =
+                "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards " +
+                "WHERE game_id=? AND card_id IN (" +
+                    "SELECT white_deck FROM game WHERE id=?" +
+                ")";
+        String getNthQuery = "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards " +
+                "WHERE game_id=? AND card_id=?";
+        String updateNextCard = "UPDATE game SET white_deck=? WHERE id=?";
+
+        List<GameCard> result = new ArrayList<>();
+
+        // First, attempt to fetch first card using the white_deck property of game.
+        try {
+            ResultSet rs = database.getQuery(getFirstQuery, Arrays.asList(gameId, gameId));
+
+            if(rs.next()) {
+                GameCard c = new GameCard(rs.getLong("card_id"),
+                                          rs.getLong("game_id"),
+                                          rs.getLong("daisy_chain"),
+                                          rs.getShort("status"));
+                result.add(c);
+            } else {
+                // In case no cards are found, return an empty list
+                return new ArrayList<>();
+            }
+        } catch (SQLException e) {
+            System.err.println("There was an error when drawing the first card: " + e);
+            return new ArrayList<>();
+        }
+
+        // Proceed to try and fetch the other n - 1 cards.
+        for(int i = n - 1; i > 0; i--) {
+            try {
+                ResultSet rs = database.getQuery(getNthQuery, Arrays.asList(gameId, result.get(result.size() - 1).getDaisyChain()));
+                if(rs.next()) {
+                    GameCard c = new GameCard(rs.getLong("card_id"),
+                                              rs.getLong("game_id"),
+                                              rs.getLong("daisy_chain"),
+                                              rs.getShort("status"));
+                    result.add(c);
+                } else {
+                    // Again, if next card does not exist, abort
+                    return new ArrayList<>();
+                }
+
+            } catch (SQLException e) {
+                System.err.println("There was an error when drawing card #" + (n - i + 1) + ": " + e);
+                return new ArrayList<>();
+            }
+        }
+
+        // Finally, try and update the game's white_deck property to the new next card.
+        try {
+            database.executeQuery(updateNextCard, Arrays.asList(result.get(result.size() - 1).getDaisyChain(), gameId));
+        } catch (SQLException e) {
+            System.err.println("There was an error updating the white_card property: " + e);
+            return new ArrayList<>();
+        }
+
+        return result;
     }
 }
