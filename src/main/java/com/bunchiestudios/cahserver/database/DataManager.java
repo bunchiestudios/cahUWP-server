@@ -3,6 +3,7 @@ package com.bunchiestudios.cahserver.database;
 import com.bunchiestudios.cahserver.datamodel.Card;
 import com.bunchiestudios.cahserver.datamodel.Game;
 import com.bunchiestudios.cahserver.datamodel.GameCard;
+import com.bunchiestudios.cahserver.datamodel.Player;
 import com.twitter.util.Future;
 import scala.runtime.AbstractFunction1;
 
@@ -171,6 +172,21 @@ public class DataManager {
         } catch(SQLException e) {
             System.err.println("There was an error when joining game: " + e);
             return false;
+        }
+    }
+
+    public Player addPlayer(String name, String token) {
+        if(token.length() != 130)
+            return null;
+
+        String query = "INSERT INTO player (name, token, game_id) VALUES (?, ?, NULL)";
+
+        try {
+            long id = database.insertAndGetIndex(query, "player_id_seq", Arrays.asList(name, token));
+            return new Player(id, name, token, null);
+        } catch (SQLException e) {
+            System.err.println("Error when adding new player: " + e);
+            return null;
         }
     }
 
