@@ -7,9 +7,9 @@ public class Player {
     private long id;
     private String name;
     private String token;
-    private long gameId;
+    private Long gameId;
 
-    public Player(long id, String name, String token, long gameId) {
+    public Player(long id, String name, String token, Long gameId) {
         this.id = id;
         this.name = name;
         this.token = token;
@@ -40,11 +40,11 @@ public class Player {
         this.token = token;
     }
 
-    public long getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(long gameId) {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 

@@ -11,7 +11,7 @@ CREATE TABLE player (
   id bigint CONSTRAINT mainkey_player PRIMARY KEY DEFAULT nextval('player_id_seq'),
   name varchar(255) UNIQUE,
   token char(130) NOT NULL,
-  game_id bigint NOT NULL REFERENCES game (id)
+  game_id bigint REFERENCES game (id)
 );
 
 CREATE SEQUENCE card_id_seq;
