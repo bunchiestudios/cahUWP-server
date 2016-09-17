@@ -6,10 +6,14 @@ package com.bunchiestudios.cahserver.datamodel;
 public class Game {
     private long id;
     private String name;
+    private Long whiteDeck;
+    private Long blackDeck;
 
-    public Game(long id, String name) {
+    public Game(long id, String name, Long whiteDeck, Long blackDeck) {
         this.id = id;
         this.name = name;
+        this.blackDeck = blackDeck;
+        this.whiteDeck = whiteDeck;
     }
 
     public long getId() {
@@ -26,6 +30,22 @@ public class Game {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getWhiteDeck() {
+        return whiteDeck;
+    }
+
+    public void setWhiteDeck(Long whiteDeck) {
+        this.whiteDeck = whiteDeck;
+    }
+
+    public Long getBlackDeck() {
+        return blackDeck;
+    }
+
+    public void setBlackDeck(Long blackDeck) {
+        this.blackDeck = blackDeck;
     }
 
     @Override
