@@ -9,10 +9,7 @@ import scala.runtime.AbstractFunction1;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class converts query results into datamodel objects, and posts/updates entries based on datamodel objects.
@@ -72,6 +69,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * Adds multiple cards for use in future games of CAH.
+     * @param cards List of cards.
+     * @return List of cards with ID properly set.
+     */
     public List<Card> addCards(List<Card> cards) {
         List<Card> result = new ArrayList<>();
         try {
@@ -89,6 +91,49 @@ public class DataManager {
         return result;
     }
 
+    public boolean addGameCards(List<GameCard> cards) {
+        StringBuffer query = new StringBuffer("INSERT INTO game_cards (card_id, game_id, player_id, daisy_chain, status) VALUES");
+        List<Object> params = new ArrayList<>();
+
+        for(int i = 0; i < cards.size(); i++) {
+            GameCard c = cards.get(i);
+            params.add(c.getCardId());
+            params.add(c.getGameId());
+            params.add(c.getPlayerId());
+            params.add(c.getDaisyChain());
+            params.add(c.getStatus());
+            query.append(" (?, ?, ?, ?, ?)");
+            if(i < cards.size() - 1)
+                query.append(',');
+        }
+
+        try {
+            database.executeQuery(query.toString(), params);
+        } catch (SQLException e) {
+            System.err.println("Error inserting game cards: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove all game cards associated with a given game.
+     * @param gameId Game's unique identifier.
+     * @return True if succeeds, false otherwise.
+     */
+    public boolean removeAllGameCards(long gameId) {
+        String query = "DELETE FROM game_cards WHERE game_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(gameId));
+        } catch (SQLException e) {
+            System.err.println("Error removing all game cards: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Creates a new game.
      * @param name Name (unique) of the game
@@ -104,6 +149,23 @@ public class DataManager {
             System.err.println("There was an error when adding game: " + e);
             return null;
         }
+    }
+
+    /**
+     * Removes a game from the database. All associated objects must be disassociated or deleted first.
+     * @param gameId Game's identifier.
+     * @return True if successful, false otherwise.
+     */
+    public boolean deleteGame(long gameId) {
+        String query = "DELETE FROM game WHERE id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(query));
+        } catch (SQLException e) {
+            System.err.println("There was an error when deleting the game: " + e);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -159,11 +221,6 @@ public class DataManager {
      * @return True if successful, false otherwise
      */
     public boolean joinGame(long gameId, long playerId) {
-        Game game = getGame(gameId);
-
-        if(game == null)
-            return false;
-
         String query = "UPDATE player SET game_id=? WHERE player_id=?";
 
         try {
@@ -175,6 +232,25 @@ public class DataManager {
         }
     }
 
+    public boolean leaveGame(long playerId) {
+        String query = "UPDATE player SET game_id=NULL WHERE player_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(playerId));
+            return true;
+        } catch (SQLException e) {
+            System.err.println("There was an error removing user from game: " + e);
+            return false;
+        }
+    }
+
+
+    /**
+     * Creates a new player and adds him to the system without adding him to a game.
+     * @param name Name used as a placeholder for the player
+     * @param token Token used to verify identity.
+     * @return A player object representing the player that was just created or null if there was an error creating
+     * the player.
+     */
     public Player addPlayer(String name, String token) {
         if(token.length() != 130)
             return null;
@@ -189,6 +265,77 @@ public class DataManager {
             return null;
         }
     }
+
+    /**
+     * Obtains a player identified by a given playerId
+     * @return The player identified by said playerId or null if none found.
+     */
+    public Player getPlayer(long playerId) {
+        String query = "SELECT id, name, token, game_id FROM player WHERE id=?";
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(playerId));
+            if(rs.next()) {
+                return new Player(rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("token"),
+                        (Long) rs.getObject("gameId"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error when obtaining player by ID: " + e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtains a player identified by a given name
+     * @return The player identified by said name or null if none found.
+     */
+    public Player getPlayer(String name) {
+        String query = "SELECT id, name, token, game_id FROM player WHERE name=?";
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(name));
+            if(rs.next()) {
+                return new Player(rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("token"),
+                        (Long) rs.getObject("gameId"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error when obtaining player by name: " + e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtains a list of all players in a given game.
+     * @param gameId The game's unique identifier.
+     * @return A list of all players in a game, which is empty on error.
+     */
+    public List<Player> getAllPlayers(long gameId) {
+        String query = "SELECT id, name, token, game_id FROM player WHERE game_id=?";
+        List<Player> result = new ArrayList<>();
+
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(gameId));
+
+            while(rs.next()) {
+                Player p = new Player(rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("token"),
+                        (Long)rs.getObject("game_id"));
+                result.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error when obtaining all players in a game: " + e);
+            return new ArrayList<>();
+        }
+
+        return result;
+    }
+
+
 
     /**
      * Obtains the next n cards to be drawn from the white card deck and sets the game's white_card property to
