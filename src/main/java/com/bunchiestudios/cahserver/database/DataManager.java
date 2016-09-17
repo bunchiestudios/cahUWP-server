@@ -71,6 +71,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * Creates a new game.
+     * @param name Name (unique) of the game
+     * @return The new game representation, with the unique identifier and name.
+     */
     public Game addGame(String name) {
         String query = "INSERT INTO game (name) VALUES (?)";
 
@@ -83,6 +88,10 @@ public class DataManager {
         }
     }
 
+    /**
+     * Obtains game uniquely identified by the name parameter.
+     * @return A game object if it exists, null otherwise
+     */
     public Game getGame(String name) {
         String query = "SELECT id, name FROM game WHERE name=?";
 
@@ -99,6 +108,10 @@ public class DataManager {
         }
     }
 
+    /**
+     * Obtains game uniquely identified by the id provided.
+     * @return A game object if it exists, null otherwise
+     */
     public Game getGame(long id) {
         String query = "SELECT id, name FROM game WHERE id=?";
 
@@ -115,6 +128,12 @@ public class DataManager {
         }
     }
 
+    /**
+     * Adds a player to a given game.
+     * @param gameId ID uniquely identifying the game to join.
+     * @param playerId ID identifying the player who wants to join.
+     * @return True if successful, false otherwise
+     */
     public boolean joinGame(long gameId, long playerId) {
         Game game = getGame(gameId);
 
@@ -132,6 +151,13 @@ public class DataManager {
         }
     }
 
+    /**
+     * Obtains the next n cards to be drawn from the white card deck and sets the game's white_card property to
+     * the next card to draw.
+     * @param gameId Game's unique identifier used to find the deck
+     * @param n Number of cards to draw
+     * @return A list of n GameCards drawn, or an empty list if an error occured.
+     */
     public List<GameCard> drawNWhiteCards(long gameId, int n) {
         String getFirstQuery =
                 "SELECT card_id, game_id, player_id, daisy_chain, status FROM game_cards " +
