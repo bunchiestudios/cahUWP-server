@@ -198,24 +198,6 @@ public class DataManager {
     }
 
     /**
-     * Discards a card by setting player_id to NULL and status to 0.
-     * @param gameId The game's unique identifier.
-     * @param cardId The card's unique identifier.
-     * @return True if the operation was successful, false otherwise.
-     */
-    public boolean discardCard(long gameId, long cardId) {
-        String query = "UPDATE game_cards SET player_id=NULL, status=0 WHERE game_id=? AND card_id=?";
-        try {
-            database.executeQuery(query, Arrays.asList(gameId, cardId));
-        } catch (SQLException e) {
-            System.err.println("There was an error discarding card: " + e);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Sets the card as played by setting status to 1.
      * @return True if successful, false otherwise.
      */
@@ -271,6 +253,41 @@ public class DataManager {
         }
 
         return result;
+    }
+
+    /**
+     * Discards a card by setting player_id to NULL and status to 0.
+     * @param gameId The game's unique identifier.
+     * @param cardId The card's unique identifier.
+     * @return True if the operation was successful, false otherwise.
+     */
+    public boolean discardCard(long gameId, long cardId) {
+        String query = "UPDATE game_cards SET player_id=NULL, status=0 WHERE game_id=? AND card_id=?";
+        try {
+            database.executeQuery(query, Arrays.asList(gameId, cardId));
+        } catch (SQLException e) {
+            System.err.println("There was an error discarding card: " + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Discards all cards marked as currently played in a given game.
+     * @param gameId Game identifier.
+     * @return True if successful, false otherwise.
+     */
+    public boolean discardAllPlayed(long gameId) {
+        String query = "UPDATE game_cards SET player_id=NULL, status=0 WHERE game_id=? AND status=1 AND player_id IS NOT NULL";
+        try {
+            database.executeQuery(query, Arrays.asList(gameId));
+        } catch (SQLException e) {
+            System.err.println("There was an error discarding all played cards: " + e);
+            return false;
+        }
+
+        return true;
     }
 
 
