@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "token": {
+      "type": "string"
+    },
+    "game_id": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "token",
+    "game_id"
+  ]
+}
+
+Example:
+{
+  "id": 3456789,
+  "token": "dsfghjk",
+  "game_id": 34567890
+}
