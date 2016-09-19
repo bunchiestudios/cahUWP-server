@@ -1,26 +1,36 @@
 {
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string"
-    },
-    "id": {
-      "type": "integer"
-    },
-    "token": {
-      "type": "string"
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "token"
+      ]
     }
   },
   "required": [
-    "name",
-    "id",
-    "token"
+    "user"
   ]
 }
 
 Example:
 {
-  "name": "exampleName",
-  "id": 846564,
-  "token": "64574logvjhvufbvifbfidbvfifbfvdndikfnvkdnvijfn"
+  "user": {
+    "id": 7563,
+    "name": "hello",
+    "token": "56789"
+  }
 }

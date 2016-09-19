@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "pick_n": {
+            "type": "integer"
+          },
+          "black": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "message",
+          "pick_n",
+          "black"
+        ]
+      }
+    }
+  },
+  "required": [
+    "user",
+    "cards"
+  ]
+}
+
+Example:
+
+{
+  "user": {
+    "id": 7563
+  },
+  "cards": [
+    {
+      "id": 45678,
+      "message": "rtyhjk",
+      "pick_n": 1,
+      "black": true
+    },
+    {
+      "id": 4567,
+      "message": "A bigger blacker game",
+      "pick_n": 0,
+      "black": false
+    }
+  ]
+}

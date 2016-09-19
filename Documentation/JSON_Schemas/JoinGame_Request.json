@@ -1,26 +1,51 @@
 {
   "type": "object",
   "properties": {
-    "id": {
-      "type": "integer"
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "token"
+      ]
     },
-    "token": {
-      "type": "string"
-    },
-    "game_id": {
-      "type": "integer"
+    "game": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "password"
+      ]
     }
   },
   "required": [
-    "id",
-    "token",
-    "game_id"
+    "user",
+    "game"
   ]
 }
 
 Example:
 {
-  "id": 3456789,
-  "token": "dsfghjk",
-  "game_id": 34567890
+  "user": {
+    "id": 7563,
+    "token": "56789"
+  },
+  "game": {
+    "id": 456789,
+    "password": "t789"
+  }
 }
