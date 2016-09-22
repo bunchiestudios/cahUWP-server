@@ -2,12 +2,17 @@ package com.bunchiestudios.cahserver.requests;
 
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
+import com.bunchiestudios.cahserver.database.DataManager;
 import org.json.JSONObject;
 
 /**
  * Created by rdelfin on 8/27/16.
  */
-public class GetUsersRequest implements ServerRequest {
+public class GetUsersRequest extends ServerRequest {
+    public GetUsersRequest(DataManager mgr) {
+        super(mgr);
+    }
+
     @Override
     public JSONObject perform(JSONObject message) {
         return null;
