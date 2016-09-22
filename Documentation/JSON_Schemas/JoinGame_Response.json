@@ -4,9 +4,6 @@
     "id": {
       "type": "integer"
     },
-    "token": {
-      "type": "string"
-    },
     "game_id": {
       "type": "integer"
     },
@@ -25,7 +22,6 @@
 Example:
 {
   "id": 3456789,
-  "token": "dsfghjk",
   "game_id": 34567890,
   "success": true
 }

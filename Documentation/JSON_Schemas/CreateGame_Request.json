@@ -16,10 +16,18 @@
         "id",
         "token"
       ]
+    },
+    "gameName": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
     }
   },
   "required": [
-    "user"
+    "user",
+    "gameName",
+    "password"
   ]
 }
 
