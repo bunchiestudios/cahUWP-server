@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "token"
+      ]
+    },
+    "game": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "password"
+      ]
+    }
+  },
+  "required": [
+    "user",
+    "game"
+  ]
+}
