@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver;
 
+import com.bunchiestudios.cahserver.database.DataManager;
 import com.bunchiestudios.cahserver.requests.*;
 import com.twitter.finagle.http.Request;
 import com.twitter.finagle.http.Response;
@@ -18,21 +19,23 @@ import java.util.Map;
  * their respective as well as the state for a particular client.
  */
 public class Protocol {
-    Map<RequestIdentifier, ServerRequest> requests;
+    private Map<RequestIdentifier, ServerRequest> requests;
+    private DataManager mgr;
 
-    public Protocol() {
-        requests = new HashMap<>();
+    public Protocol(DataManager mgr) {
+        this.mgr = mgr;
+        this.requests = new HashMap<>();
         List<ServerRequest> tempList = new ArrayList<>();
 
-        tempList.add(new CreateGameRequest());
-        tempList.add(new GetAllCardsRequest());
-        tempList.add(new GetUsersRequest());
-        tempList.add(new GetWinnerRequest());
-        tempList.add(new JoinGameRequest());
-        tempList.add(new LeaveRequest());
-        tempList.add(new LoginRequest());
-        tempList.add(new PickWinnerRequest());
-        tempList.add(new PlayRequest());
+        tempList.add(new CreateGameRequest(mgr));
+        tempList.add(new GetAllCardsRequest(mgr));
+        tempList.add(new GetUsersRequest(mgr));
+        tempList.add(new GetWinnerRequest(mgr));
+        tempList.add(new JoinGameRequest(mgr));
+        tempList.add(new LeaveRequest(mgr));
+        tempList.add(new LoginRequest(mgr));
+        tempList.add(new PickWinnerRequest(mgr));
+        tempList.add(new PlayRequest(mgr));
 
         for(ServerRequest req : tempList)
             requests.put(req.getIdentifier(), req);
