@@ -2,7 +2,8 @@ approve_by_comment: true
 approve_regex: '^(Approved|shipit|:\+1:)'
 reset_on_push: true
 reviewers:
-    required: 2
+    required: 3
     members:
         - franspaco
         - rdelfin
+        - vpineda1996
