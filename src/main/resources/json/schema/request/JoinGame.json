@@ -27,8 +27,7 @@
         }
       },
       "required": [
-        "id",
-        "password"
+        "id"
       ]
     }
   },

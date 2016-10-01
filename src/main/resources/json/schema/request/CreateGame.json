@@ -25,7 +25,6 @@
   },
   "required": [
     "user",
-    "gameName",
-    "password"
+    "gameName"
   ]
 }
