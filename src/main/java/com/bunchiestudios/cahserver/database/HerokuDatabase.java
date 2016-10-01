@@ -27,6 +27,8 @@ public class HerokuDatabase {
             password = dbUri.getUserInfo().split(":")[1];
         } catch(URISyntaxException e) {
             System.err.println("DATABASE_URL environment variable could not be parsed: " + e);
+        } catch(NullPointerException e) {
+            System.err.println("DATABASE_URL environment variable not set: " + e);
         }
 
     }

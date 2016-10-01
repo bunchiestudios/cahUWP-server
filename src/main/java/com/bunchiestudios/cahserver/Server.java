@@ -1,5 +1,7 @@
 package com.bunchiestudios.cahserver;
 
+import com.bunchiestudios.cahserver.database.DataManager;
+import com.bunchiestudios.cahserver.database.HerokuDatabase;
 import com.twitter.finagle.Http;
 import com.twitter.finagle.ListeningServer;
 import com.twitter.finagle.Service;
@@ -17,13 +19,15 @@ import java.util.concurrent.Executors;
 public class Server extends AbstractTwitterServer {
     private Protocol protocol;
     private FuturePool pool;
+    private DataManager mgr;
     
     private int CLIENT_THREADS = 100;   //Number of client threads
     private int port;    //Stores the port to be used for comms
 
     public Server(int port) {
+        this.mgr = new DataManager(new HerokuDatabase());
         this.port = port;
-        protocol = new Protocol();
+        protocol = new Protocol(mgr);
         pool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(CLIENT_THREADS));
     }
 

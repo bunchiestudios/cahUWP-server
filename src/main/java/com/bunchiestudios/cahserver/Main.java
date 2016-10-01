@@ -13,6 +13,7 @@ public class Main {
             new Server(4242).main(args);
         } catch (Exception e) {
             System.err.println("There was an exception!\n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
