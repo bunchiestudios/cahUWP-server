@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "game_id": {
+      "type": "integer"
+    },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

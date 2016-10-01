@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "game_id": {
+      "type": "integer"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "token",
+    "game_id",
+    "success"
+  ]
+}
+
+Example:
+{
+  "id": 3456789,
+  "game_id": 34567890,
+  "success": true
+}

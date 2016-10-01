@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "token": {
+          "type": "string"
+        },
+        "is_caesar": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "token",
+        "is_caesar"
+      ]
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "is_caesar": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "Status",
+          "is_caesar"
+        ]
+      }
+    },
+    "deck": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "cards_on_board": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  },
+  "required": [
+    "user",
+    "users",
+    "deck",
+    "cards_on_board"
+  ]
+}
