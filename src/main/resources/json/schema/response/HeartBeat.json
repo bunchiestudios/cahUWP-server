@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
     "user": {
@@ -28,8 +29,11 @@
           "name": {
             "type": "string"
           },
-          "Status": {
+          "status": {
             "type": "string"
+          },
+          "points": {
+            "type": "integer"
           },
           "is_caesar": {
             "type": "boolean"
@@ -37,7 +41,8 @@
         },
         "required": [
           "name",
-          "Status",
+          "status",
+          "points",
           "is_caesar"
         ]
       }

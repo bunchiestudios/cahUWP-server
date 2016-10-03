@@ -33,3 +33,14 @@
     "play"
   ]
 }
+
+Example:
+{
+"user": {
+"id": 7563,
+"token": "56789"
+},
+"play": {
+"card_id": 11
+}
+}
