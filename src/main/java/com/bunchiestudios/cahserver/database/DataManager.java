@@ -91,6 +91,11 @@ public class DataManager {
         return result;
     }
 
+    /**
+     * Adds a list of cards for a live game. This is done at initialization
+     * @param cards List of game cards associated to card
+     * @return True if successful, false otherwise
+     */
     public boolean addGameCards(List<GameCard> cards) {
         StringBuffer query = new StringBuffer("INSERT INTO game_cards (card_id, game_id, player_id, daisy_chain, status) VALUES");
         List<Object> params = new ArrayList<>();
@@ -232,6 +237,12 @@ public class DataManager {
         }
     }
 
+    /**
+     * Removes a player from a game. Please not this does NOT update the appropriate game cards if it happens
+     * during a game.
+     * @param playerId Unique player identifier
+     * @return True if successful, false otherwise
+     */
     public boolean leaveGame(long playerId) {
         String query = "UPDATE player SET game_id=NULL WHERE player_id=?";
         try {
