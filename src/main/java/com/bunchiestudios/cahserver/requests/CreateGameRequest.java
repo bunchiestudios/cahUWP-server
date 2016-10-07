@@ -7,7 +7,8 @@ import com.twitter.finagle.http.Method;
 import org.json.JSONObject;
 
 /**
- * Created by rdelfin on 8/27/16.
+ * This is the request made by the user when they want to create a new game. Provided a game name, an optional password,
+ * and some authentication, the appropriate data structures should be set up.
  */
 public class CreateGameRequest extends ServerRequest {
 
@@ -17,6 +18,8 @@ public class CreateGameRequest extends ServerRequest {
 
     @Override
     public JSONObject perform(JSONObject message) {
+        JSON
+
         return null;
     }
 
