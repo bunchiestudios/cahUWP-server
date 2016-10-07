@@ -66,11 +66,11 @@ public class CreateGameRequest extends ServerRequest {
             JSONObject userReponse = new JSONObject();
             JSONObject gameResponse = new JSONObject();
 
-            userReponse.append("id", player.getId());
-            gameResponse.append("id", game.getId());
+            userReponse.put("id", player.getId());
+            gameResponse.put("id", game.getId());
 
-            response.append("user", userReponse);
-            response.append("game", gameResponse);
+            response.put("user", userReponse);
+            response.put("game", gameResponse);
 
             if(!responseValid(response))
                 System.err.println("Error! Reponse for createGameRequest does not follow JSON schema: " + response.toString());
