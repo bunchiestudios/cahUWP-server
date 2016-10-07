@@ -2,6 +2,7 @@ package com.bunchiestudios.cahserver;
 
 import com.bunchiestudios.cahserver.database.DataManager;
 import com.bunchiestudios.cahserver.requests.*;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.twitter.finagle.http.Request;
 import com.twitter.finagle.http.Response;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
@@ -22,7 +23,7 @@ public class Protocol {
     private Map<RequestIdentifier, ServerRequest> requests;
     private DataManager mgr;
 
-    public Protocol(DataManager mgr) {
+    public Protocol(DataManager mgr) throws ProcessingException {
         this.mgr = mgr;
         this.requests = new HashMap<>();
         List<ServerRequest> tempList = new ArrayList<>();
