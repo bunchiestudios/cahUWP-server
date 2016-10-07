@@ -16,6 +16,11 @@ public class GetAllCardsRequest extends ServerRequest {
 
     @Override
     public JSONObject perform(JSONObject message) {
+        if(!requestValid(message))
+            return new JSONObject("{\"error\": \"The request format is invalid\"}");
+
+        DataManager mgr = getMgr();
+
         return null;
     }
 
