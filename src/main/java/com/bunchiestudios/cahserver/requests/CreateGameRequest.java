@@ -7,13 +7,15 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.twitter.finagle.http.Method;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class CreateGameRequest extends ServerRequest {
 
-    public CreateGameRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/CreateGame.json", "resource:json/schema/response/CreateGame.json");
+    public CreateGameRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, "json/schema/request/CreateGame.json", "json/schema/response/CreateGame.json");
     }
 
     @Override

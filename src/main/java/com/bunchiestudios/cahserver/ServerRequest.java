@@ -10,6 +10,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by rdelfin on 8/27/16.
@@ -20,11 +21,19 @@ public abstract class ServerRequest {
     private JsonSchema resSchema;
     private JsonSchemaFactory schemaFactory;
 
-    public ServerRequest(DataManager mgr, String reqSchemaFile, String resSchemaFile) throws ProcessingException {
-        this.mgr = mgr;
-        schemaFactory = JsonSchemaFactory.byDefault();
-        reqSchema = schemaFactory.getJsonSchema(reqSchemaFile);
-        resSchema = schemaFactory.getJsonSchema(resSchemaFile);
+    public ServerRequest(DataManager mgr, String reqSchemaFile, String resSchemaFile) throws ProcessingException, IOException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            this.mgr = mgr;
+            schemaFactory = JsonSchemaFactory.byDefault();
+            URL reqSchemaURL = getClass().getClassLoader().getResource(reqSchemaFile);
+            URL resSchemaURL = getClass().getClassLoader().getResource(resSchemaFile);
+            reqSchema = schemaFactory.getJsonSchema(objectMapper.readTree(reqSchemaURL));
+            resSchema = schemaFactory.getJsonSchema(objectMapper.readTree(resSchemaURL));
+        } catch (IOException e) {
+            System.err.println("Error opening schema files! Check your paths.");
+            throw e;
+        }
     }
 
     protected DataManager getMgr() { return mgr; }

@@ -7,12 +7,14 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONObject;
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class LoginRequest extends ServerRequest {
-    public LoginRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/Login.json", "resource:json/schema/response/Login.json");
+    public LoginRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, "json/schema/request/Login.json", "json/schema/response/Login.json");
     }
 
     @Override

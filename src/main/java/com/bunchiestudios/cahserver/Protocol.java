@@ -9,6 +9,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Protocol {
     private Map<RequestIdentifier, ServerRequest> requests;
     private DataManager mgr;
 
-    public Protocol(DataManager mgr) throws ProcessingException {
+    public Protocol(DataManager mgr) throws ProcessingException, IOException {
         this.mgr = mgr;
         this.requests = new HashMap<>();
         List<ServerRequest> tempList = new ArrayList<>();

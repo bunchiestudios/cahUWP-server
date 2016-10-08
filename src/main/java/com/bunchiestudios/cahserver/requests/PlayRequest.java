@@ -6,12 +6,14 @@ import com.bunchiestudios.cahserver.database.DataManager;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class PlayRequest extends ServerRequest {
-    public PlayRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/Play.json", "resource:json/schema/response/Play.json");
+    public PlayRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, "json/schema/request/Play.json", "json/schema/response/Play.json");
     }
 
     @Override

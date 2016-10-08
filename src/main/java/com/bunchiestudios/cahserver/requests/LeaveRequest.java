@@ -6,12 +6,14 @@ import com.bunchiestudios.cahserver.database.DataManager;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class LeaveRequest extends ServerRequest {
-    public LeaveRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/Leave.json", "resource:json/schema/response/Leave.json");
+    public LeaveRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, "json/schema/request/Leave.json", "json/schema/response/Leave.json");
     }
 
     @Override

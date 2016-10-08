@@ -59,6 +59,12 @@
     </dependency>
   </dependencies>
   <build>
+    <testResources>
+      <testResource>
+        <directory>${project.basedir}/src/main/resources</directory>
+      </testResource>
+    </testResources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -109,10 +115,12 @@
         </dependencies>
         <configuration>
           <includes>
-            <include>TruthTest.java</include>
+            <!--<include>TruthTest.java</include>-->
+            <include>**/*.java</include>
           </includes>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 </project>

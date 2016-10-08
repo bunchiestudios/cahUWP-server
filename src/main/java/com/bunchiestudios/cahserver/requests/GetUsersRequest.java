@@ -6,12 +6,14 @@ import com.bunchiestudios.cahserver.database.DataManager;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class GetUsersRequest extends ServerRequest {
-    public GetUsersRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/GetUsers.json", "resource:json/schema/response/GetUsers.json");
+    public GetUsersRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, "json/schema/request/GetUsers.json", "json/schema/response/GetUsers.json");
     }
 
     @Override
