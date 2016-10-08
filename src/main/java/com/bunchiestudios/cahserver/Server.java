@@ -2,6 +2,7 @@ package com.bunchiestudios.cahserver;
 
 import com.bunchiestudios.cahserver.database.DataManager;
 import com.bunchiestudios.cahserver.database.HerokuDatabase;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.twitter.finagle.Http;
 import com.twitter.finagle.ListeningServer;
 import com.twitter.finagle.Service;
@@ -24,7 +25,7 @@ public class Server extends AbstractTwitterServer {
     private int CLIENT_THREADS = 100;   //Number of client threads
     private int port;    //Stores the port to be used for comms
 
-    public Server(int port) {
+    public Server(int port) throws ProcessingException {
         this.mgr = new DataManager(new HerokuDatabase());
         this.port = port;
         protocol = new Protocol(mgr);
