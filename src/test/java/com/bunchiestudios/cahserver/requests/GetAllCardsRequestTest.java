@@ -65,24 +65,21 @@ public class GetAllCardsRequestTest {
     @Test
     public void performTest() throws Exception {
         JSONObject res1 = req.perform(new JSONObject("{\"user\": {\"id\": 4242, \"token\": \"watwat\"}}"));    // Valid request
-        JSONObject res2 = req.perform(new JSONObject(""));                                                     // Empty request
-        JSONObject res3 = req.perform(new JSONObject("{\"valid\": true}"));                                    // Valid JSON, invalid request
-        JSONObject res4 = req.perform(new JSONObject("{\"user\": {\"id\": \"100\", \"token\":\"wat\"}}"));     // Correct structure, incorrect types
-        JSONObject res5 = req.perform(new JSONObject("{\"user\": {\"id\": 100, \"token\":4242}}"));            // Correct structure, incorrect types
+        JSONObject res2 = req.perform(new JSONObject("{\"valid\": true}"));                                    // Valid JSON, invalid request
+        JSONObject res3 = req.perform(new JSONObject("{\"user\": {\"id\": \"100\", \"token\":\"wat\"}}"));     // Correct structure, incorrect types
+        JSONObject res4 = req.perform(new JSONObject("{\"user\": {\"id\": 100, \"token\":4242}}"));            // Correct structure, incorrect types
 
         // First should give correct response. All others should error out
         assertTrue(res1.equals(cardsResponse));
         assertTrue(!res2.equals(cardsResponse));
         assertTrue(!res3.equals(cardsResponse));
         assertTrue(!res4.equals(cardsResponse));
-        assertTrue(!res5.equals(cardsResponse));
 
         // Ensure they all have an error field
         // ...somewhere
         assertNotNull(res2.get("error"));
         assertNotNull(res3.get("error"));
         assertNotNull(res4.get("error"));
-        assertNotNull(res5.get("error"));
 
 
 
