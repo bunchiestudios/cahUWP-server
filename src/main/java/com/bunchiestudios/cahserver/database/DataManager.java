@@ -544,4 +544,29 @@ public class DataManager {
 
         return result;
     }
+
+
+    public Player authenticateUser(long id, String token) {
+        String query = "SELECT id, name, token, game_id FRIN player WHERE id=?";
+
+        // Try and fetch player with given ID and check token.
+        try {
+            ResultSet rs = database.getQuery(query, Arrays.asList(id));
+
+            if(rs.next()) {
+                String newToken = rs.getString("token");
+                String name = rs.getString("name");
+                Long gameId = rs.getLong("game_id");
+
+                // Tocken
+                if(token.equals(newToken))
+                    return new Player(id, name, token, gameId);
+            }
+        } catch(SQLException e) {
+            System.err.println("There was an error authenticating user with id " + id + ": " + e);
+        }
+
+        return null; // No such user found. Return error.
+    }
+
 }
