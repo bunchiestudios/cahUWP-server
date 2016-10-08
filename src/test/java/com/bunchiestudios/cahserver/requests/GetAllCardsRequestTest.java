@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class GetAllCardsRequestTest {
     DataManager mgr;
     GetAllCardsRequest req;
-    JSONObject cardsResponse;
+    String cardsResponse;
 
     @Before
     public void setUp() throws Exception {
@@ -46,11 +47,11 @@ public class GetAllCardsRequestTest {
                 cardsResponseBuilder.append(", ");
         }
         cardsResponseBuilder.append("]}");
-        cardsResponse = new JSONObject(cardsResponseBuilder.toString());
+        cardsResponse = cardsResponseBuilder.toString();
 
         // Mockito: Lets you fake method calls. Basically intercepts calls to mgr and returns whatever you specify
         mgr = Mockito.mock(DataManager.class);
-        Mockito.when(mgr.authenticateUser(Mockito.anyLong(), Mockito.anyString())).thenReturn(new Player(1, "me", "hax0r", 1L));
+        Mockito.when(mgr.authenticateUser(Mockito.anyLong(), Mockito.anyString())).thenReturn(new Player(4242, "me", "hax0r", 1L));
         Mockito.when(mgr.getCards()).thenReturn(cards);
 
         // What we actually use
@@ -66,14 +67,14 @@ public class GetAllCardsRequestTest {
     public void performTest() throws Exception {
         JSONObject res1 = req.perform(new JSONObject("{\"user\": {\"id\": 4242, \"token\": \"watwat\"}}"));    // Valid request
         JSONObject res2 = req.perform(new JSONObject("{\"valid\": true}"));                                    // Valid JSON, invalid request
-        JSONObject res3 = req.perform(new JSONObject("{\"user\": {\"id\": \"100\", \"token\":\"wat\"}}"));     // Correct structure, incorrect types
-        JSONObject res4 = req.perform(new JSONObject("{\"user\": {\"id\": 100, \"token\":4242}}"));            // Correct structure, incorrect types
+        JSONObject res3 = req.perform(new JSONObject("{\"user\": {\"id\": \"4242\", \"token\":\"wat\"}}"));     // Correct structure, incorrect types
+        JSONObject res4 = req.perform(new JSONObject("{\"user\": {\"id\": 4242, \"token\":4242}}"));            // Correct structure, incorrect types
 
         // First should give correct response. All others should error out
-        assertTrue(res1.equals(cardsResponse));
-        assertTrue(!res2.equals(cardsResponse));
-        assertTrue(!res3.equals(cardsResponse));
-        assertTrue(!res4.equals(cardsResponse));
+        JSONAssert.assertEquals(res1.toString(), cardsResponse, true);
+        JSONAssert.assertNotEquals(res2.toString(), cardsResponse, true);
+        JSONAssert.assertNotEquals(res3.toString(), cardsResponse, true);
+        JSONAssert.assertNotEquals(res4.toString(), cardsResponse, true);
 
         // Ensure they all have an error field
         // ...somewhere
