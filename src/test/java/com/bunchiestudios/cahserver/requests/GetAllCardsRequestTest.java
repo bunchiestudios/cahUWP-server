@@ -36,11 +36,14 @@ public class GetAllCardsRequestTest {
         // Generate the appropriate JSON from list of cards
         StringBuilder cardsResponseBuilder = new StringBuilder();
         cardsResponseBuilder.append("{\"user\":{\"id\": 4242}, \"cards\":[");
-        for(Card c : cards) {  // Generate each card object
+        for(int i = 0; i < cards.size(); i++) {  // Generate each card object
+            Card c = cards.get(i);
             cardsResponseBuilder.append("{\"id\": ").append(c.getId()).append(", \"message\": \"")
-                                .append(c.getMessage()).append("\", pick_n: ").append(c.getPickN())
-                                .append(", black:").append(c.isBlack() ? "true" : "false")
+                                .append(c.getMessage()).append("\", \"pick_n\": ").append(c.getPickN())
+                                .append(", \"black\":").append(c.isBlack() ? "true" : "false")
                                 .append("}");
+            if(i < cards.size() - 1)
+                cardsResponseBuilder.append(", ");
         }
         cardsResponseBuilder.append("]}");
         cardsResponse = new JSONObject(cardsResponseBuilder.toString());
