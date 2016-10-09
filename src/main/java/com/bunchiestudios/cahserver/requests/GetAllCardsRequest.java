@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class GetAllCardsRequest extends ServerRequest {
     public GetAllCardsRequest(DataManager mgr) throws ProcessingException, IOException {
-        super(mgr, "json/schema/request/GetAllCards.json", "json/schema/response/GetAllCards.json");
+        super(mgr, Config.GET_ALL_CARDS_SCHEMA_FILE);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class CreateGameRequest extends ServerRequest {
 
     public CreateGameRequest(DataManager mgr) throws ProcessingException, IOException {
-        super(mgr, "json/schema/request/CreateGame.json", "json/schema/response/CreateGame.json");
+        super(mgr, Config.CREATE_GAME_SCHEMA_FILE);
     }
 
     @Override

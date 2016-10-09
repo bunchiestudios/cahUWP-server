@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -13,7 +14,7 @@ import java.io.IOException;
  */
 public class PickWinnerRequest extends ServerRequest {
     public PickWinnerRequest(DataManager mgr) throws ProcessingException, IOException {
-        super(mgr, "json/schema/request/PickWinner.json", "json/schema/response/PickWinner.json");
+        super(mgr, Config.PICK_WINNER_SCHEMA_FILE);
     }
 
     @Override

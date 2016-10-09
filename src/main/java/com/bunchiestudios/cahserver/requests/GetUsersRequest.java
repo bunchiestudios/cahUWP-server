@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -13,7 +14,7 @@ import java.io.IOException;
  */
 public class GetUsersRequest extends ServerRequest {
     public GetUsersRequest(DataManager mgr) throws ProcessingException, IOException {
-        super(mgr, "json/schema/request/GetUsers.json", "json/schema/response/GetUsers.json");
+        super(mgr, Config.GET_USERS_SCHEMA_FILE);
     }
 
     @Override

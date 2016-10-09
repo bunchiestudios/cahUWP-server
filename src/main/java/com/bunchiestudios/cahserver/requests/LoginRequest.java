@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -14,7 +15,7 @@ import java.io.IOException;
  */
 public class LoginRequest extends ServerRequest {
     public LoginRequest(DataManager mgr) throws ProcessingException, IOException {
-        super(mgr, "json/schema/request/Login.json", "json/schema/response/Login.json");
+        super(mgr, Config.LOGIN_SCHEMA_FILE);
     }
 
     @Override

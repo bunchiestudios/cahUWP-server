@@ -36,6 +36,11 @@ public abstract class ServerRequest {
         }
     }
 
+
+    public ServerRequest(DataManager mgr, String baseSchemaFile) throws ProcessingException, IOException {
+        this(mgr, Config.BASE_REQUEST_PATH + baseSchemaFile, Config.BASE_RESPONSE_PATH + baseSchemaFile);
+    }
+
     protected DataManager getMgr() { return mgr; }
 
     public abstract JSONObject perform(JSONObject message);
