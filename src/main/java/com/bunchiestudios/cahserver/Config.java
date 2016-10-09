@@ -18,7 +18,7 @@ public class Config {
     public static String HEART_BEAT_SCHEMA_FILE="HeartBeat.json";
     public static String GET_GAMES_SCHEMA_FILE="GetGames.json";
 
-    public static String BASE_REQUEST_PATH = "json/schema/response/";
-    public static String BASE_RESPONSE_PATH = "json/schema/request/";
+    public static String BASE_REQUEST_PATH = "json/schema/request/";
+    public static String BASE_RESPONSE_PATH = "json/schema/response/";
 
 }
