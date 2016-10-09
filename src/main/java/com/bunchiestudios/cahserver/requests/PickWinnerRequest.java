@@ -1,17 +1,20 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 /**
  * Created by rdelfin on 8/27/16.
  */
 public class PickWinnerRequest extends ServerRequest {
-    public PickWinnerRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/PickWinner.json", "resource:json/schema/response/PickWinner.json");
+    public PickWinnerRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, Config.PICK_WINNER_SCHEMA_FILE);
     }
 
     @Override

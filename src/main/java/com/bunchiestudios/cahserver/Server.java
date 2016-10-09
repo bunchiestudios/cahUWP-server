@@ -12,6 +12,7 @@ import com.twitter.server.AbstractTwitterServer;
 import com.twitter.util.*;
 import scala.runtime.AbstractFunction0;
 
+import java.io.IOException;
 import java.util.concurrent.Executors;
 
 /**
@@ -25,7 +26,7 @@ public class Server extends AbstractTwitterServer {
     private int CLIENT_THREADS = 100;   //Number of client threads
     private int port;    //Stores the port to be used for comms
 
-    public Server(int port) throws ProcessingException {
+    public Server(int port) throws ProcessingException, IOException {
         this.mgr = new DataManager(new HerokuDatabase());
         this.port = port;
         protocol = new Protocol(mgr);

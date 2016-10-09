@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -12,6 +13,7 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.twitter.finagle.http.Method;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +23,8 @@ import java.util.List;
  */
 public class CreateGameRequest extends ServerRequest {
 
-    public CreateGameRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/CreateGame.json", "resource:json/schema/response/CreateGame.json");
+    public CreateGameRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, Config.CREATE_GAME_SCHEMA_FILE);
     }
 
     @Override

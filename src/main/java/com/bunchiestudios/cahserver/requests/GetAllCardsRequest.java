@@ -1,5 +1,6 @@
 package com.bunchiestudios.cahserver.requests;
 
+import com.bunchiestudios.cahserver.Config;
 import com.bunchiestudios.cahserver.RequestIdentifier;
 import com.bunchiestudios.cahserver.ServerRequest;
 import com.bunchiestudios.cahserver.database.DataManager;
@@ -10,6 +11,7 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,8 @@ import java.util.List;
  * Created by rdelfin on 8/27/16.
  */
 public class GetAllCardsRequest extends ServerRequest {
-    public GetAllCardsRequest(DataManager mgr) throws ProcessingException {
-        super(mgr, "resource:json/schema/request/GetAllCards.json", "resource:json/schema/response/GetAllCards.json");
+    public GetAllCardsRequest(DataManager mgr) throws ProcessingException, IOException {
+        super(mgr, Config.GET_ALL_CARDS_SCHEMA_FILE);
     }
 
     @Override
