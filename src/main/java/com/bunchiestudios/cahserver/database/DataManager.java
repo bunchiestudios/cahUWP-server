@@ -547,7 +547,7 @@ public class DataManager {
 
 
     public Player authenticateUser(long id, String token) {
-        String query = "SELECT id, name, token, game_id FRIN player WHERE id=?";
+        String query = "SELECT id, name, token, game_id FROM player WHERE id=?";
 
         // Try and fetch player with given ID and check token.
         try {
